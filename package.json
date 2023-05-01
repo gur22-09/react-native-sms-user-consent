@@ -38,7 +38,6 @@
   },
   "keywords": [
     "react-native",
-    "ios",
     "android"
   ],
   "repository": "https://github.com/gur22-09/react-native-sms-user-consent",
