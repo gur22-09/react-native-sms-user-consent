@@ -11,11 +11,11 @@ npm install react-native-sms-user-consent
 ## Usage
 
 ```js
-import { multiply } from 'react-native-sms-user-consent';
+import { useSmsConsent } from 'react-native-sms-user-consent';
 
 // ...
 
-const result = await multiply(3, 7);
+const { code, error } = useSmsConsent();
 ```
 
 ## Contributing
