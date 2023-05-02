@@ -1,4 +1,11 @@
 import { NativeModules, Platform } from 'react-native';
+import {
+  getVerificationCode,
+  addErrorListener,
+  startSmsHandling,
+  startSmsListener,
+  stopSmsListener,
+} from './smsUserConsentModule';
 
 const LINKING_ERROR =
   `The package 'react-native-sms-user-consent' doesn't seem to be linked. Make sure: \n\n` +
@@ -20,3 +27,11 @@ const SmsUserConsent = NativeModules.SmsUserConsent
 export function multiply(a: number, b: number): Promise<number> {
   return SmsUserConsent.multiply(a, b);
 }
+
+export {
+  getVerificationCode,
+  addErrorListener,
+  startSmsHandling,
+  startSmsListener,
+  stopSmsListener,
+};
