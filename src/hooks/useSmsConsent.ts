@@ -6,11 +6,11 @@ import {
 } from 'src/smsUserConsentModule';
 
 interface Props {
-  codeLength: number;
+  codeLength?: number;
 }
 
 export const useSmsConsent = (props: Props) => {
-  const { codeLength } = props;
+  const { codeLength = 4 } = props;
   const [code, setCode] = useState<string | null>(null);
   const [error, setError] = useState<string>('');
 
