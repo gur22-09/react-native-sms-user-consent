@@ -1,6 +1,4 @@
-import { getVerificationCode } from 'src/smsUserConsentModule';
-
-it.todo('write a test');
+import { getVerificationCode } from '../smsUserConsentModule';
 
 describe('getVerificationCode', () => {
   it('should give the sms code correctly', () => {
