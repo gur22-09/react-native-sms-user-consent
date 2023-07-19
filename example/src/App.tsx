@@ -1,18 +1,14 @@
 import * as React from 'react';
-
+import { useSmsConsent } from 'react-native-sms-user-consent';
 import { StyleSheet, View, Text } from 'react-native';
-import { multiply } from 'react-native-sms-user-consent';
 
 export default function App() {
-  const [result, setResult] = React.useState<number | undefined>();
-
-  React.useEffect(() => {
-    multiply(3, 7).then(setResult);
-  }, []);
-
+  const { code, error } = useSmsConsent({ codeLength: 4 });
+  console.log(code);
   return (
     <View style={styles.container}>
-      <Text>Result: {result}</Text>
+      <Text>Result: {code}</Text>
+      <Text>Error: {error}</Text>
     </View>
   );
 }

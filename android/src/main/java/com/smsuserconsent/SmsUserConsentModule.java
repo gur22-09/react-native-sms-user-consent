@@ -26,17 +26,11 @@ public class SmsUserConsentModule extends ReactContextBaseJavaModule {
   public ReactApplicationContext reactContext;
   private SmsBroadcastReceiver broadcastReceiver;
   private SmsListener listener;
-  public static long startSmsConsentTime;
 
   @Override
-  @NonNull
   public String getName() {
     return NAME;
   }
-
-
-
-
 
   public SmsUserConsentModule(ReactApplicationContext reactContext) {
     super(reactContext);
@@ -48,9 +42,8 @@ public class SmsUserConsentModule extends ReactContextBaseJavaModule {
     Activity activity = getCurrentActivity();
     if (activity == null) {
       throw new SmsUserConsentException(
-        Errors.NULL_ACTIVITY,
-        "activity is null"
-      );
+          Errors.NULL_ACTIVITY,
+          "activity is null");
     }
 
     SmsRetriever.getClient(getCurrentActivity()).startSmsUserConsent(null);
@@ -58,12 +51,11 @@ public class SmsUserConsentModule extends ReactContextBaseJavaModule {
     broadcastReceiver = new SmsBroadcastReceiver(getCurrentActivity(), this);
 
     getCurrentActivity()
-      .registerReceiver(
-        broadcastReceiver,
-        new IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION),
-        SmsRetriever.SEND_PERMISSION,
-        null
-      );
+        .registerReceiver(
+            broadcastReceiver,
+            new IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION),
+            SmsRetriever.SEND_PERMISSION,
+            null);
 
     reactContext.addActivityEventListener(listener);
   }
@@ -73,16 +65,14 @@ public class SmsUserConsentModule extends ReactContextBaseJavaModule {
 
     if (activity == null) {
       throw new SmsUserConsentException(
-        Errors.NULL_ACTIVITY,
-        "Could not unsubscribe, activity is null"
-      );
+          Errors.NULL_ACTIVITY,
+          "Could not unsubscribe, activity is null");
     }
 
     if (broadcastReceiver == null) {
       throw new SmsUserConsentException(
-        Errors.NULL_BROADCAST_RECEIVER,
-        "Could not unsubscribe, broadcastReceiver is null"
-      );
+          Errors.NULL_BROADCAST_RECEIVER,
+          "Could not unsubscribe, broadcastReceiver is null");
     }
 
     activity.unregisterReceiver(broadcastReceiver);
@@ -123,8 +113,8 @@ public class SmsUserConsentModule extends ReactContextBaseJavaModule {
     Log.d("sending sms event to JS", sms);
 
     reactContext
-      .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-      .emit(SMS_RETRIEVED, params);
+        .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+        .emit(SMS_RETRIEVED, params);
   }
 
   private void sendErrorEventToJs(SmsUserConsentException err) {
@@ -132,15 +122,14 @@ public class SmsUserConsentModule extends ReactContextBaseJavaModule {
     params.putString(err.code, err.getMessage());
 
     reactContext
-      .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-      .emit(SMS_RETRIEVE_ERROR, params);
+        .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+        .emit(SMS_RETRIEVE_ERROR, params);
   }
 
   @ReactMethod
   public void startSmsListener(Promise promise) {
     try {
       // subscribe to sms listener
-      startSmsConsentTime = System.currentTimeMillis();
       subscribe();
       promise.resolve(null);
     } catch (SmsUserConsentException err) {
@@ -169,12 +158,11 @@ public class SmsUserConsentModule extends ReactContextBaseJavaModule {
     return constants;
   }
 
-   // Example method
+  // Example method
   // See https://reactnative.dev/docs/native-modules-android
   @ReactMethod
   public void multiply(double a, double b, Promise promise) {
     promise.resolve(a * b);
   }
-
 
 }

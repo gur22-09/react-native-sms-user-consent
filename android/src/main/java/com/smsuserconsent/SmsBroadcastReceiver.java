@@ -18,9 +18,8 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
   private SmsUserConsentModule moduleInstance;
 
   public SmsBroadcastReceiver(
-    Activity activity,
-    SmsUserConsentModule moduleInstance
-  ) {
+      Activity activity,
+      SmsUserConsentModule moduleInstance) {
     super();
     this.activity = activity;
     this.moduleInstance = moduleInstance;
@@ -31,28 +30,23 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
     Bundle extras = intent.getExtras();
     if (extras == null) {
       moduleInstance.handleError(
-        new SmsUserConsentException(
-          Errors.COULD_NOT_HANDLE_BROADCAST,
-          "Intent extras are null"
-        )
-      );
+          new SmsUserConsentException(
+              Errors.COULD_NOT_HANDLE_BROADCAST,
+              "Intent extras are null"));
       return;
     }
 
     Status smsRetrieverStatus = (Status) extras.get(SmsRetriever.EXTRA_STATUS);
     if (smsRetrieverStatus == null) {
       moduleInstance.handleError(
-        new SmsUserConsentException(
-          Errors.COULD_NOT_HANDLE_BROADCAST,
-          "SMS retriever status is null"
-        )
-      );
+          new SmsUserConsentException(
+              Errors.COULD_NOT_HANDLE_BROADCAST,
+              "SMS retriever status is null"));
       return;
     }
-    long timeAtMessageReceived = System.currentTimeMillis();
+
     Intent consentIntent = extras.getParcelable(
-      SmsRetriever.EXTRA_CONSENT_INTENT
-    );
+        SmsRetriever.EXTRA_CONSENT_INTENT);
 
     switch (smsRetrieverStatus.getStatusCode()) {
       case CommonStatusCodes.SUCCESS:
@@ -60,20 +54,17 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
           activity.startActivityForResult(consentIntent, SMS_CONSENT_REQUEST);
         } catch (Exception e) {
           moduleInstance.handleError(
-            new SmsUserConsentException(
-              Errors.COULD_NOT_HANDLE_BROADCAST,
-              "'startActivityForResult' failed"
-            )
-          );
+              new SmsUserConsentException(
+                  Errors.COULD_NOT_HANDLE_BROADCAST,
+                  "'startActivityForResult' failed"));
         }
         break;
       case CommonStatusCodes.TIMEOUT:
         moduleInstance.handleError(
-          new SmsUserConsentException(
-            Errors.CONSENT_TIMEOUT,
-            "SMS was not retrieved in 5 minutes"
-          )
-        );
+            new SmsUserConsentException(
+                Errors.CONSENT_TIMEOUT,
+                "SMS was not retrieved in 5 minutes"));
+
         break;
     }
   }

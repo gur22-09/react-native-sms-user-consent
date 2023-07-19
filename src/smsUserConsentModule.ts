@@ -1,7 +1,8 @@
 import { NativeModules, NativeEventEmitter } from 'react-native';
 import { Errors, Events } from './constants';
+import { useEffect, useState } from 'react';
 
-const { SmsUserConsentModule } = NativeModules;
+const { SmsUserConsent: SmsUserConsentModule } = NativeModules;
 const eventEmitter = new NativeEventEmitter(SmsUserConsentModule);
 
 export async function startSmsListener() {
@@ -54,3 +55,45 @@ export function addErrorListener(onErrorReceived: (event: any) => void) {
 export function getErrors(): Record<Errors, string> {
   return SmsUserConsentModule.getConstants();
 }
+
+interface Props {
+  codeLength: number;
+}
+
+export const useSmsConsent = (props: Props) => {
+  const { codeLength = 4 } = props;
+  const [code, setCode] = useState<string | null>(null);
+  const [error, setError] = useState<string>('');
+
+  useEffect(() => {
+    const stopSmsHandling = startSmsHandling((event) => {
+      const receivedSms = event?.sms;
+      if (!receivedSms) {
+        console.error('No SMS received!');
+        return;
+      }
+
+      const retrievedCode = getVerificationCode(receivedSms, codeLength);
+
+      if (!retrievedCode) {
+        console.error('No code retrieved!');
+        return;
+      }
+
+      setCode(retrievedCode);
+    });
+
+    return stopSmsHandling;
+  }, [codeLength]);
+
+  useEffect(() => {
+    const removeErrorListener = addErrorListener((errorMap) => {
+      const [err] = <string[]>Object.values(errorMap);
+      setError(err!);
+    });
+
+    return removeErrorListener;
+  });
+
+  return { code, error };
+};
